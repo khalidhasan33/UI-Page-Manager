@@ -7,7 +7,8 @@ namespace UIPackage.UI
 {
     public enum BottonType
     {
-        ActionButton1, ActionButton2, ActionButton3, ActionButton4, ActionButton5, ActionButton6
+        ActionButton1, ActionButton2, ActionButton3, ActionButton4, ActionButton5,
+        ActionButton6, ActionButton7, ActionButton8, ActionButton9, ActionButton10
     }
 
     public class UIButton : MonoBehaviour
@@ -50,10 +51,22 @@ namespace UIPackage.UI
                 case BottonType.ActionButton6:
                     targetView = view.node.ActionButton6;
                     break;
+                case BottonType.ActionButton7:
+                    targetView = view.node.ActionButton7;
+                    break;
+                case BottonType.ActionButton8:
+                    targetView = view.node.ActionButton8;
+                    break;
+                case BottonType.ActionButton9:
+                    targetView = view.node.ActionButton9;
+                    break;
+                case BottonType.ActionButton10:
+                    targetView = view.node.ActionButton10;
+                    break;
             }
 
             if (viewManager != null && targetView != null)
-                viewManager.ChangingView(view.node.UINodesID, targetView.UINodesID);
+                viewManager.ChangingView(view.node.UINodesView, targetView.UINodesView);
         }
 
         private void OnEnable()

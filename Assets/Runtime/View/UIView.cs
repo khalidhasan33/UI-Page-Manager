@@ -27,8 +27,6 @@ namespace UIPackage.UI
 
     public class UIView : MonoBehaviour
     {
-        public UIViewEnum view;
-
         public UINode node;
 
         [SerializeField]

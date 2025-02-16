@@ -9,7 +9,7 @@ namespace UIPackage.DataAssets
     {
         public string ID;
 
-        public List<string> UINodesID;
+        public List<UINode> UINodesView;
 
         public UINode ActionButton1;
         public UINode ActionButton2;
@@ -17,5 +17,9 @@ namespace UIPackage.DataAssets
         public UINode ActionButton4;
         public UINode ActionButton5;
         public UINode ActionButton6;
+        public UINode ActionButton7;
+        public UINode ActionButton8;
+        public UINode ActionButton9;
+        public UINode ActionButton10;
     }
 }

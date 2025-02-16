@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7155180216130281311}
   - component: {fileID: 1892097982782537509}
   m_Layer: 5
-  m_Name: PanelLoadSceneGameplay
+  m_Name: PanelLoadSceneMainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,11 +104,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e156e468b49643445897af8c095c8caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: 4
-  node: {fileID: 11400000, guid: 55f48187288e39e4595ebcb567a4073e, type: 2}
+  node: {fileID: 11400000, guid: 47a3a60a4f94ec8489142b04e23d68c1, type: 2}
   transitionDelay: 0
   transitionDuration: 0
-  targetScene: 
+  targetScene: SampleMainMenuScene
   isAdditive: 0
   onDelayTrigger:
     m_PersistentCalls:
@@ -126,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6151224001981172594}
   m_Layer: 5
-  m_Name: LoadSceneGameplay
+  m_Name: LoadSceneMainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

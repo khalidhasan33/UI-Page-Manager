@@ -10,15 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18e5ff6f14c4f3488c57056f6aa24d8, type: 3}
-  m_Name: NodeSettingsMenu
+  m_Name: NodeGameplayLoader
   m_EditorClassIdentifier: 
-  ID: UISettingsMenu
+  ID: UIGameplaySceneLoader
   UINodesView:
-  - {fileID: 11400000, guid: f744c3b7839ff68419f785e73a2a7d78, type: 2}
   - {fileID: 11400000}
-  ActionButton1: {fileID: 11400000, guid: f744c3b7839ff68419f785e73a2a7d78, type: 2}
+  ActionButton1: {fileID: 0}
   ActionButton2: {fileID: 0}
   ActionButton3: {fileID: 0}
   ActionButton4: {fileID: 0}
   ActionButton5: {fileID: 0}
   ActionButton6: {fileID: 0}
+  ActionButton7: {fileID: 0}
+  ActionButton8: {fileID: 0}
+  ActionButton9: {fileID: 0}
+  ActionButton10: {fileID: 0}

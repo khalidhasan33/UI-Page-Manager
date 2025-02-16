@@ -9,8 +9,6 @@ namespace UIPackage.UI
 {
     public class UIViewSceneLoader : MonoBehaviour
     {
-        public UIViewEnum view;
-
         public UINode node;
 
         [SerializeField]
