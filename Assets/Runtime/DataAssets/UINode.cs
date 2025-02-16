@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UIPackage.UI;
 using UnityEngine;
 
 namespace UIPackage.DataAssets
@@ -5,14 +7,13 @@ namespace UIPackage.DataAssets
     [CreateAssetMenu(fileName = "Data", menuName = "UIPackage/NodeData")]
     public class UINode : ScriptableObject
     {
-        public UIViewsGroup viewsGroupName;
+        public List<UIViewEnum> viewName;
 
-        public UIViewsGroup Back1;
-        public UIViewsGroup Back2;
-        public UIViewsGroup Back3;
-
-        public UIViewsGroup Next1;
-        public UIViewsGroup Next2;
-        public UIViewsGroup Next3;
+        public UINode ActionButton1;
+        public UINode ActionButton2;
+        public UINode ActionButton3;
+        public UINode ActionButton4;
+        public UINode ActionButton5;
+        public UINode ActionButton6;
     }
 }

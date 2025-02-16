@@ -16,36 +16,36 @@ namespace UIPackage.UI
         private List<UIViewSceneLoader> listSceneLoader;
 
         #region Methods
-        public void ChangingView(UIViewsGroup currentViewGroup, UIViewsGroup targetViewGroup)
+        public void ChangingView(List<UIViewEnum> currentViewGroup, List<UIViewEnum> targetViewGroup)
         {
             Debug.Log("Changing View");
             HideViewGroup(currentViewGroup, targetViewGroup);
             ShowViewGroup(targetViewGroup);
         }
 
-        public void HideViewGroup(UIViewsGroup currentViewGroup, UIViewsGroup targetViewGroup)
+        public void HideViewGroup(List<UIViewEnum> currentViewGroup, List<UIViewEnum> targetViewGroup)
         {
-            for (int i = 0; i < currentViewGroup.viewName.Count; i++)
+            for (int i = 0; i < currentViewGroup.Count; i++)
             {
                 for (int j = 0; j < listView.Count; j++)
                 {
-                    if (currentViewGroup.viewName[i] == listView[j].view)
+                    if (currentViewGroup[i] == listView[j].view)
                     {
                         // Hide view if there is current view on targetview group
-                        if (!targetViewGroup.IsViewNameExist(currentViewGroup.viewName[i]))
+                        if (!IsViewNameExist(targetViewGroup, currentViewGroup[i]))
                             listView[j].Hide();
                     }
                 }
             }
         }
 
-        public void ShowViewGroup(UIViewsGroup viewGroup)
+        public void ShowViewGroup(List<UIViewEnum> viewGroup)
         {
-            for (int i = 0; i < viewGroup.viewName.Count; i++)
+            for (int i = 0; i < viewGroup.Count; i++)
             {
                 for (int j = 0; j < listView.Count; j++)
                 {
-                    if (viewGroup.viewName[i] == listView[j].view)
+                    if (viewGroup[i] == listView[j].view)
                     {
                         if (!listView[j].isShow)
                             StartCoroutine(listView[j].Show());
@@ -53,7 +53,7 @@ namespace UIPackage.UI
                 }
                 for (int j = 0; j < listSceneLoader.Count; j++)
                 {
-                    if (viewGroup.viewName[i] == listSceneLoader[j].view)
+                    if (viewGroup[i] == listSceneLoader[j].view)
                     {
                         StartCoroutine(listSceneLoader[j].Show());
                     }
@@ -65,7 +65,17 @@ namespace UIPackage.UI
         {
             yield return 0.2f;
 
-            ShowViewGroup(nodes[0].viewsGroupName);
+            ShowViewGroup(nodes[0].viewName);
+        }
+
+        public bool IsViewNameExist(List<UIViewEnum> targetViewGroup, UIViewEnum searchedName)
+        {
+            for (int i = 0; i < targetViewGroup.Count; i++)
+            {
+                if (searchedName == targetViewGroup[i])
+                    return true;
+            }
+            return false;
         }
         #endregion
 

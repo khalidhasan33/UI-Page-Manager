@@ -7,8 +7,7 @@ namespace UIPackage.UI
 {
     public enum BottonType
     {
-        Back1, Back2, Back3,
-        Next1, Next2, Next3,
+        ActionButton1, ActionButton2, ActionButton3, ActionButton4, ActionButton5, ActionButton6
     }
 
     public class UIButton : MonoBehaviour
@@ -29,32 +28,32 @@ namespace UIPackage.UI
         private void OnClick()
         {
             BounceSmallAnimation();
-            UIViewsGroup targetView = null;
+            UINode targetView = null;
 
             switch(buttonType)
             {
-                case BottonType.Back1:
-                    targetView = view.node.Back1;
+                case BottonType.ActionButton1:
+                    targetView = view.node.ActionButton1;
                     break;
-                case BottonType.Back2:
-                    targetView = view.node.Back2;
+                case BottonType.ActionButton2:
+                    targetView = view.node.ActionButton2;
                     break;
-                case BottonType.Back3:
-                    targetView = view.node.Back3;
+                case BottonType.ActionButton3:
+                    targetView = view.node.ActionButton3;
                     break;
-                case BottonType.Next1:
-                    targetView = view.node.Next1;
+                case BottonType.ActionButton4:
+                    targetView = view.node.ActionButton4;
                     break;
-                case BottonType.Next2:
-                    targetView = view.node.Next2;
+                case BottonType.ActionButton5:
+                    targetView = view.node.ActionButton5;
                     break;
-                case BottonType.Next3:
-                    targetView = view.node.Next3;
+                case BottonType.ActionButton6:
+                    targetView = view.node.ActionButton6;
                     break;
             }
 
             if (viewManager != null && targetView != null)
-                viewManager.ChangingView(view.node.viewsGroupName, targetView);
+                viewManager.ChangingView(view.node.viewName, targetView.viewName);
         }
 
         private void OnEnable()
