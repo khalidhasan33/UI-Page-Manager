@@ -7,7 +7,9 @@ namespace UIPackage.DataAssets
     [CreateAssetMenu(fileName = "Data", menuName = "UIPackage/NodeData")]
     public class UINode : ScriptableObject
     {
-        public List<UIViewEnum> viewName;
+        public string ID;
+
+        public List<string> UINodesID;
 
         public UINode ActionButton1;
         public UINode ActionButton2;

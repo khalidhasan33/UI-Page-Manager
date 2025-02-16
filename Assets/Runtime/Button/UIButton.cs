@@ -53,7 +53,7 @@ namespace UIPackage.UI
             }
 
             if (viewManager != null && targetView != null)
-                viewManager.ChangingView(view.node.viewName, targetView.viewName);
+                viewManager.ChangingView(view.node.UINodesID, targetView.UINodesID);
         }
 
         private void OnEnable()
