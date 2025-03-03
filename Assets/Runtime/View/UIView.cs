@@ -16,18 +16,22 @@ namespace UIPackage.UI
     public enum ShowAnimations
     { 
         None,
-        Fade
+        Fade,
+        SlideUp
     }
 
     public enum HideAnimations
     {
         None,
-        Fade
+        Fade,
+        SlideDown
     }
 
     public class UIView : MonoBehaviour
     {
         public UINode node;
+
+        public RectTransform rectTransform;
 
         [SerializeField]
         private BehaviorAtStart behaviorAtStart;
@@ -66,7 +70,7 @@ namespace UIPackage.UI
         public bool isShow;
 
         private CanvasGroup canvasGroup;
-        private Tween fadeTween;
+        private Tween tween;
 
         #region Methods
         public void InstantShow()
@@ -80,17 +84,41 @@ namespace UIPackage.UI
             onDelayTrigger.Invoke();
             yield return new WaitForSeconds(transitionDelay);
 
-            canvasGroup.alpha = 0f;
-            gameObject.SetActive(true);
-            onStartShow.Invoke();
-
-            Fade(1f, durationShow, () =>
+            TweenCallback onEnd = () =>
             {
                 isShow = true;
                 onFinishedShow.Invoke();
                 canvasGroup.interactable = true;
                 canvasGroup.blocksRaycasts = true;
-            });
+            };
+
+            switch (showAnimations)
+            {
+                case ShowAnimations.Fade:
+                    canvasGroup.alpha = 0f;
+                    gameObject.SetActive(true);
+                    onStartShow.Invoke();
+
+                    Fade(1f, durationShow, onEnd);
+                    break;
+
+                case ShowAnimations.SlideUp:
+                    float height = rectTransform.rect.height;
+
+                    rectTransform.offsetMax = new Vector2(0, -height);
+                    rectTransform.offsetMin = new Vector2(0, -height);
+
+                    Debug.Log(rectTransform.offsetMax);
+                    Debug.Log(rectTransform.offsetMin);
+
+                    gameObject.SetActive(true);
+                    onStartShow.Invoke();
+                    SlideUp(0, durationShow, onEnd);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         public void InstantHide()
@@ -102,25 +130,70 @@ namespace UIPackage.UI
         public void Hide()
         {
             onStartHide.Invoke();
-            Fade(0f, durationHide, () =>
+
+
+            TweenCallback onEnd = () =>
             {
                 isShow = false;
                 onFinishedHide.Invoke();
                 canvasGroup.interactable = false;
                 canvasGroup.blocksRaycasts = false;
                 gameObject.SetActive(false);
-            });
+                canvasGroup.alpha = 1f;
+            };
+
+            switch (hideAnimations)
+            {
+                case HideAnimations.Fade:
+                    canvasGroup.alpha = 0f;
+                    gameObject.SetActive(true);
+                    onStartShow.Invoke();
+
+                    Fade(0f, durationHide, onEnd);
+                    break;
+
+                case HideAnimations.SlideDown:
+                    float height = rectTransform.rect.height;
+
+                    SlideUp(-height, durationHide, onEnd);
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         private void Fade(float endValue, float duration, TweenCallback onEnd)
         {
-            if (fadeTween != null)
+            if (tween != null)
             {
-                fadeTween.Kill(false);
+                tween.Kill(false);
             }
 
-            fadeTween = canvasGroup.DOFade(endValue, duration);
-            fadeTween.onComplete += onEnd;
+            tween = canvasGroup.DOFade(endValue, duration);
+            tween.onComplete += onEnd;
+        }
+
+        private void SlideUp(float endValue, float duration, TweenCallback onEnd)
+        {
+            if (tween != null)
+            {
+                tween.Kill(false);
+            }
+
+            tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(Ease.OutQuad);
+            tween.onComplete += onEnd;
+        }
+
+        private void SlideDown(float endValue, float duration, TweenCallback onEnd)
+        {
+            if (tween != null)
+            {
+                tween.Kill(false);
+            }
+
+            tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(Ease.OutQuad);
+            tween.onComplete += onEnd;
         }
         #endregion
 

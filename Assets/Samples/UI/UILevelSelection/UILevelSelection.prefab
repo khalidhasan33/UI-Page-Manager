@@ -552,12 +552,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   node: {fileID: 11400000, guid: 73c35d5239b741a499ce4e2306bc9f45, type: 2}
+  rectTransform: {fileID: 7785733213387576444}
   behaviorAtStart: 1
   showAnimations: 1
   transitionDelay: 0
-  durationShow: 0
+  durationShow: 0.4
   hideAnimations: 1
-  durationHide: 0
+  durationHide: 0.4
   onDelayTrigger:
     m_PersistentCalls:
       m_Calls: []
