@@ -17,18 +17,25 @@ namespace UIPackage.UI
     { 
         None,
         Fade,
-        SlideUp
+        SlideUp,
+        SlideDown,
+        SlideLeft,
+        SlideRight,
     }
 
     public enum HideAnimations
     {
         None,
         Fade,
-        SlideDown
+        SlideUp,
+        SlideDown,
+        SlideLeft,
+        SlideRight,
     }
 
     public class UIView : MonoBehaviour
     {
+        [Header("Required")]
         public UINode node;
 
         public RectTransform rectTransform;
@@ -36,21 +43,30 @@ namespace UIPackage.UI
         [SerializeField]
         private BehaviorAtStart behaviorAtStart;
 
+        [Header("Animations Show")]
         [SerializeField]
         private ShowAnimations showAnimations;
 
         [SerializeField]
-        private float transitionDelay;
+        private Ease showEaseAnimations;
+
+        [SerializeField]
+        private float startTransitionDelay;
 
         [SerializeField]
         private float durationShow;
 
+        [Header("Animations Hide")]
         [SerializeField]
         private HideAnimations hideAnimations;
 
         [SerializeField]
+        private Ease hideEaseAnimations;
+
+        [SerializeField]
         private float durationHide;
 
+        [Header("Events")]
         [SerializeField]
         private UnityEvent onDelayTrigger;
 
@@ -82,7 +98,7 @@ namespace UIPackage.UI
         public IEnumerator Show()
         {
             onDelayTrigger.Invoke();
-            yield return new WaitForSeconds(transitionDelay);
+            yield return new WaitForSeconds(startTransitionDelay);
 
             TweenCallback onEnd = () =>
             {
@@ -92,6 +108,9 @@ namespace UIPackage.UI
                 canvasGroup.blocksRaycasts = true;
             };
 
+            float height = rectTransform.rect.height;
+            float width = rectTransform.rect.width;
+
             switch (showAnimations)
             {
                 case ShowAnimations.Fade:
@@ -99,21 +118,43 @@ namespace UIPackage.UI
                     gameObject.SetActive(true);
                     onStartShow.Invoke();
 
-                    Fade(1f, durationShow, onEnd);
+                    Fade(1f, durationShow, onEnd, showEaseAnimations);
                     break;
 
                 case ShowAnimations.SlideUp:
-                    float height = rectTransform.rect.height;
-
                     rectTransform.offsetMax = new Vector2(0, -height);
                     rectTransform.offsetMin = new Vector2(0, -height);
 
-                    Debug.Log(rectTransform.offsetMax);
-                    Debug.Log(rectTransform.offsetMin);
+                    gameObject.SetActive(true);
+                    onStartShow.Invoke();
+                    SlideVertical(0, durationShow, onEnd, showEaseAnimations);
+                    break;
+
+                case ShowAnimations.SlideDown:
+                    rectTransform.offsetMax = new Vector2(0, height);
+                    rectTransform.offsetMin = new Vector2(0, height);
 
                     gameObject.SetActive(true);
                     onStartShow.Invoke();
-                    SlideUp(0, durationShow, onEnd);
+                    SlideVertical(0, durationShow, onEnd, showEaseAnimations);
+                    break;
+
+                case ShowAnimations.SlideLeft:
+                    rectTransform.offsetMax = new Vector2(width, 0);
+                    rectTransform.offsetMin = new Vector2(width, 0);
+
+                    gameObject.SetActive(true);
+                    onStartShow.Invoke();
+                    SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
+                    break;
+
+                case ShowAnimations.SlideRight:
+                    rectTransform.offsetMax = new Vector2(-width, 0);
+                    rectTransform.offsetMin = new Vector2(-width, 0);
+
+                    gameObject.SetActive(true);
+                    onStartShow.Invoke();
+                    SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
                     break;
 
                 default:
@@ -131,7 +172,6 @@ namespace UIPackage.UI
         {
             onStartHide.Invoke();
 
-
             TweenCallback onEnd = () =>
             {
                 isShow = false;
@@ -142,6 +182,9 @@ namespace UIPackage.UI
                 canvasGroup.alpha = 1f;
             };
 
+            float height = rectTransform.rect.height;
+            float width = rectTransform.rect.width;
+
             switch (hideAnimations)
             {
                 case HideAnimations.Fade:
@@ -149,13 +192,23 @@ namespace UIPackage.UI
                     gameObject.SetActive(true);
                     onStartShow.Invoke();
 
-                    Fade(0f, durationHide, onEnd);
+                    Fade(0f, durationHide, onEnd, hideEaseAnimations);
                     break;
 
                 case HideAnimations.SlideDown:
-                    float height = rectTransform.rect.height;
+                    SlideVertical(-height, durationHide, onEnd, hideEaseAnimations);
+                    break;
 
-                    SlideUp(-height, durationHide, onEnd);
+                case HideAnimations.SlideUp:
+                    SlideVertical(height, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideLeft:
+                    SlideHorizontal(-width, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideRight:
+                    SlideHorizontal(width, durationHide, onEnd, hideEaseAnimations);
                     break;
 
                 default:
@@ -163,36 +216,36 @@ namespace UIPackage.UI
             }
         }
 
-        private void Fade(float endValue, float duration, TweenCallback onEnd)
+        private void Fade(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
             if (tween != null)
             {
                 tween.Kill(false);
             }
 
-            tween = canvasGroup.DOFade(endValue, duration);
+            tween = canvasGroup.DOFade(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
         }
 
-        private void SlideUp(float endValue, float duration, TweenCallback onEnd)
+        private void SlideVertical(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
             if (tween != null)
             {
                 tween.Kill(false);
             }
 
-            tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(Ease.OutQuad);
+            tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
         }
 
-        private void SlideDown(float endValue, float duration, TweenCallback onEnd)
+        private void SlideHorizontal(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
             if (tween != null)
             {
                 tween.Kill(false);
             }
 
-            tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(Ease.OutQuad);
+            tween = rectTransform.DOAnchorPosX(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
         }
         #endregion

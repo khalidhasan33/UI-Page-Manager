@@ -242,10 +242,12 @@ MonoBehaviour:
   node: {fileID: 11400000, guid: 966c70491e90559448eee5877d78af07, type: 2}
   rectTransform: {fileID: 5216279786042668162}
   behaviorAtStart: 1
-  showAnimations: 2
-  transitionDelay: 0
-  durationShow: 0.4
-  hideAnimations: 2
+  showAnimations: 5
+  showEaseAnimations: 28
+  startTransitionDelay: 0
+  durationShow: 0.8
+  hideAnimations: 5
+  hideEaseAnimations: 6
   durationHide: 0.4
   onDelayTrigger:
     m_PersistentCalls:
