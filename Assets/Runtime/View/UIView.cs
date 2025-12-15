@@ -21,6 +21,10 @@ namespace UIPackage.UI
         SlideDown,
         SlideLeft,
         SlideRight,
+        SlideFadeUp,
+        SlideFadeDown,
+        SlideFadeLeft,
+        SlideFadeRight,
     }
 
     public enum HideAnimations
@@ -31,6 +35,10 @@ namespace UIPackage.UI
         SlideDown,
         SlideLeft,
         SlideRight,
+        SlideFadeUp,
+        SlideFadeDown,
+        SlideFadeLeft,
+        SlideFadeRight,
     }
 
     public class UIView : MonoBehaviour
@@ -38,33 +46,31 @@ namespace UIPackage.UI
         [Header("Required")]
         public UINode node;
 
-        public RectTransform rectTransform;
-
         [SerializeField]
-        private BehaviorAtStart behaviorAtStart;
+        private BehaviorAtStart behaviorAtStart = BehaviorAtStart.Hide;
 
         [Header("Animations Show")]
         [SerializeField]
-        private ShowAnimations showAnimations;
+        private ShowAnimations showAnimations = ShowAnimations.Fade;
 
         [SerializeField]
-        private Ease showEaseAnimations;
+        private Ease showEaseAnimations = Ease.Linear;
 
         [SerializeField]
-        private float startTransitionDelay;
+        private float startTransitionDelay = 0;
 
         [SerializeField]
-        private float durationShow;
+        private float durationShow = 0.4f;
 
         [Header("Animations Hide")]
         [SerializeField]
-        private HideAnimations hideAnimations;
+        private HideAnimations hideAnimations = HideAnimations.Fade;
 
         [SerializeField]
-        private Ease hideEaseAnimations;
+        private Ease hideEaseAnimations = Ease.Linear;
 
         [SerializeField]
-        private float durationHide;
+        private float durationHide = 0.4f;
 
         [Header("Events")]
         [SerializeField]
@@ -82,9 +88,14 @@ namespace UIPackage.UI
         [SerializeField]
         private UnityEvent onFinishedHide;
 
+        [SerializeField]
+        private UnityEvent onAlreadyShown;
+
         [HideInInspector]
         public bool isShow;
 
+        private bool isShowing;
+        private RectTransform rectTransform;
         private CanvasGroup canvasGroup;
         private Tween tween;
 
@@ -97,68 +108,118 @@ namespace UIPackage.UI
 
         public IEnumerator Show()
         {
-            onDelayTrigger.Invoke();
-            yield return new WaitForSeconds(startTransitionDelay);
-
-            TweenCallback onEnd = () =>
+            if (!isShowing)
             {
-                isShow = true;
-                onFinishedShow.Invoke();
-                canvasGroup.interactable = true;
-                canvasGroup.blocksRaycasts = true;
-            };
+                isShowing = true;
+                onDelayTrigger.Invoke();
+                yield return new WaitForSeconds(startTransitionDelay);
 
-            float height = rectTransform.rect.height;
-            float width = rectTransform.rect.width;
+                TweenCallback onEnd = () =>
+                {
+                    isShow = true;
+                    isShowing = false;
+                    onFinishedShow.Invoke();
+                    canvasGroup.interactable = true;
+                    canvasGroup.blocksRaycasts = true;
+                };
 
-            switch (showAnimations)
-            {
-                case ShowAnimations.Fade:
-                    canvasGroup.alpha = 0f;
-                    gameObject.SetActive(true);
-                    onStartShow.Invoke();
+                float height = rectTransform.rect.height;
+                float width = rectTransform.rect.width;
 
-                    Fade(1f, durationShow, onEnd, showEaseAnimations);
-                    break;
+                switch (showAnimations)
+                {
+                    case ShowAnimations.Fade:
+                        canvasGroup.alpha = 0f;
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
 
-                case ShowAnimations.SlideUp:
-                    rectTransform.offsetMax = new Vector2(0, -height);
-                    rectTransform.offsetMin = new Vector2(0, -height);
+                        Fade(1f, durationShow, onEnd, showEaseAnimations);
+                        break;
 
-                    gameObject.SetActive(true);
-                    onStartShow.Invoke();
-                    SlideVertical(0, durationShow, onEnd, showEaseAnimations);
-                    break;
+                    case ShowAnimations.SlideFadeUp:
+                        canvasGroup.alpha = 0f;
+                        rectTransform.offsetMax = new Vector2(0, -height);
+                        rectTransform.offsetMin = new Vector2(0, -height);
 
-                case ShowAnimations.SlideDown:
-                    rectTransform.offsetMax = new Vector2(0, height);
-                    rectTransform.offsetMin = new Vector2(0, height);
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        canvasGroup.DOFade(1f, durationShow).SetEase(showEaseAnimations);
+                        SlideVertical(0, durationShow, onEnd, showEaseAnimations);
+                        break;
 
-                    gameObject.SetActive(true);
-                    onStartShow.Invoke();
-                    SlideVertical(0, durationShow, onEnd, showEaseAnimations);
-                    break;
+                    case ShowAnimations.SlideFadeDown:
+                        canvasGroup.alpha = 0f;
+                        rectTransform.offsetMax = new Vector2(0, height);
+                        rectTransform.offsetMin = new Vector2(0, height);
 
-                case ShowAnimations.SlideLeft:
-                    rectTransform.offsetMax = new Vector2(width, 0);
-                    rectTransform.offsetMin = new Vector2(width, 0);
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        canvasGroup.DOFade(1f, durationShow).SetEase(showEaseAnimations);
+                        SlideVertical(0, durationShow, onEnd, showEaseAnimations);
+                        break;
 
-                    gameObject.SetActive(true);
-                    onStartShow.Invoke();
-                    SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
-                    break;
+                    case ShowAnimations.SlideFadeLeft:
+                        canvasGroup.alpha = 0f;
+                        rectTransform.offsetMax = new Vector2(width, 0);
+                        rectTransform.offsetMin = new Vector2(width, 0);
 
-                case ShowAnimations.SlideRight:
-                    rectTransform.offsetMax = new Vector2(-width, 0);
-                    rectTransform.offsetMin = new Vector2(-width, 0);
+                        gameObject.SetActive(true);
+                        canvasGroup.alpha = 0f;
+                        onStartShow.Invoke();
+                        Fade(1f, durationShow, null, showEaseAnimations);
+                        SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
+                        break;
 
-                    gameObject.SetActive(true);
-                    onStartShow.Invoke();
-                    SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
-                    break;
+                    case ShowAnimations.SlideFadeRight:
+                        canvasGroup.alpha = 0f;
+                        rectTransform.offsetMax = new Vector2(-width, 0);
+                        rectTransform.offsetMin = new Vector2(-width, 0);
 
-                default:
-                    break;
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        Fade(1f, durationShow, null, showEaseAnimations);
+                        SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
+                        break;
+
+                    case ShowAnimations.SlideUp:
+                        rectTransform.offsetMax = new Vector2(0, -height);
+                        rectTransform.offsetMin = new Vector2(0, -height);
+
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        SlideVertical(0, durationShow, onEnd, showEaseAnimations);
+                        break;
+
+                    case ShowAnimations.SlideDown:
+                        rectTransform.offsetMax = new Vector2(0, height);
+                        rectTransform.offsetMin = new Vector2(0, height);
+
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        SlideVertical(0, durationShow, onEnd, showEaseAnimations);
+                        break;
+
+                    case ShowAnimations.SlideLeft:
+                        rectTransform.offsetMax = new Vector2(width, 0);
+                        rectTransform.offsetMin = new Vector2(width, 0);
+
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
+                        break;
+
+                    case ShowAnimations.SlideRight:
+                        rectTransform.offsetMax = new Vector2(-width, 0);
+                        rectTransform.offsetMin = new Vector2(-width, 0);
+
+                        gameObject.SetActive(true);
+                        onStartShow.Invoke();
+                        SlideHorizontal(0, durationShow, onEnd, showEaseAnimations);
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
 
@@ -179,7 +240,6 @@ namespace UIPackage.UI
                 canvasGroup.interactable = false;
                 canvasGroup.blocksRaycasts = false;
                 gameObject.SetActive(false);
-                canvasGroup.alpha = 1f;
             };
 
             float height = rectTransform.rect.height;
@@ -188,11 +248,27 @@ namespace UIPackage.UI
             switch (hideAnimations)
             {
                 case HideAnimations.Fade:
-                    canvasGroup.alpha = 0f;
-                    gameObject.SetActive(true);
-                    onStartShow.Invoke();
-
                     Fade(0f, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideFadeDown:
+                    SlideVertical(-height, durationHide, onEnd, hideEaseAnimations);
+                    canvasGroup.DOFade(0f, durationShow).SetEase(showEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideFadeUp:
+                    SlideVertical(height, durationHide, onEnd, hideEaseAnimations);
+                    canvasGroup.DOFade(0f, durationShow).SetEase(showEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideFadeLeft:
+                    SlideHorizontal(-width, durationHide, onEnd, hideEaseAnimations);
+                    canvasGroup.DOFade(0f, durationShow).SetEase(showEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideFadeRight:
+                    SlideHorizontal(width, durationHide, onEnd, hideEaseAnimations);
+                    canvasGroup.DOFade(0f, durationShow).SetEase(showEaseAnimations);
                     break;
 
                 case HideAnimations.SlideDown:
@@ -248,11 +324,17 @@ namespace UIPackage.UI
             tween = rectTransform.DOAnchorPosX(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
         }
+
+        public void TriggerAlreadyShown()
+        {
+            onAlreadyShown.Invoke();
+        }
         #endregion
 
         #region Unity callbacks
         void Start()
         {
+            rectTransform = gameObject.GetComponent<RectTransform>();
             canvasGroup = gameObject.GetComponent<CanvasGroup>();
 
             switch (behaviorAtStart) {

@@ -104,10 +104,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e156e468b49643445897af8c095c8caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Popuplist:
+  - SampleMainMenuScene
+  - SampleGameplayScene
+  TargetScene: SampleMainMenuScene
   node: {fileID: 11400000, guid: 47a3a60a4f94ec8489142b04e23d68c1, type: 2}
+  showAnimations: 1
+  showEaseAnimations: 1
   transitionDelay: 0
   transitionDuration: 0
-  targetScene: SampleMainMenuScene
   isAdditive: 0
   onDelayTrigger:
     m_PersistentCalls:

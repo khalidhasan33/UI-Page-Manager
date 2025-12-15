@@ -104,6 +104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e27250f927491644aacb73f0dd80ca0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hideAnimation: 1
+  hideEaseAnimations: 1
   durationHide: 0.2
 --- !u!1 &8103948745879874116
 GameObject:

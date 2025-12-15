@@ -91,13 +91,18 @@ namespace UIPackage.UI
         public void BounceSmallAnimation()
         {
             Vector3 originalSize = this.gameObject.transform.localScale;
+            button.interactable = false;
 
             this.gameObject.transform.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.1f)
                 .SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
                     this.gameObject.transform.DOScale(originalSize, 0.1f)
-                        .SetEase(Ease.Linear);
+                        .SetEase(Ease.Linear)
+                        .OnComplete(() =>
+                        {
+                            button.interactable = true;
+                        });
                 });
         }
         #endregion

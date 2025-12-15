@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UIPackage.UI;
 using UnityEngine;
 
 namespace UIPackage.DataAssets

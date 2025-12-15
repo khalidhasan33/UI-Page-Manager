@@ -1,67 +1,130 @@
 using DG.Tweening;
+using UIPackage.UI;
 using UnityEngine;
 
-public class UIViewTransitionIn : MonoBehaviour
+namespace UIPackage.UI
 {
-    [SerializeField]
-    private float durationHide;
-
-    private CanvasGroup canvasGroup;
-    private Tween fadeTween;
-
-    #region Methods
-    public void InstantShow()
+    public class UIViewTransitionIn : MonoBehaviour
     {
-        gameObject.SetActive(true);
-    }
+        [SerializeField]
+        private HideAnimations hideAnimation = HideAnimations.Fade;
 
-    public void InstantHide()
-    {
-        gameObject.SetActive(false);
-    }
+        [SerializeField]
+        private Ease hideEaseAnimations = Ease.Linear;
 
-    public void Hide()
-    {
-        Fade(0f, durationHide, () =>
+        [SerializeField]
+        private float durationHide = 0.4f;
+
+        private RectTransform rectTransform;
+        private CanvasGroup canvasGroup;
+        private Tween tween;
+
+        #region Methods
+        public void InstantShow()
         {
-            canvasGroup.interactable = false;
-            canvasGroup.blocksRaycasts = false;
-            gameObject.SetActive(false);
-        });
-    }
-
-    private void Fade(float endValue, float duration, TweenCallback onEnd)
-    {
-        if (fadeTween != null)
-        {
-            fadeTween.Kill(false);
+            gameObject.SetActive(true);
         }
 
-        fadeTween = canvasGroup.DOFade(endValue, duration);
-        fadeTween.onComplete += onEnd;
+        public void InstantHide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Hide()
+        {
+            TweenCallback onEnd = () =>
+            {
+                canvasGroup.interactable = false;
+                canvasGroup.blocksRaycasts = false;
+                gameObject.SetActive(false);
+            };
+
+            float height = rectTransform.rect.height;
+            float width = rectTransform.rect.width;
+
+            switch (hideAnimation)
+            {
+                case HideAnimations.Fade:
+                    Fade(0f, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideDown:
+                    SlideVertical(-height, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideUp:
+                    SlideVertical(height, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideLeft:
+                    SlideHorizontal(-width, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                case HideAnimations.SlideRight:
+                    SlideHorizontal(width, durationHide, onEnd, hideEaseAnimations);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void Fade(float endValue, float duration, TweenCallback onEnd, Ease ease)
+        {
+            if (tween != null)
+            {
+                tween.Kill(false);
+            }
+
+            tween = canvasGroup.DOFade(endValue, duration).SetEase(ease);
+            tween.onComplete += onEnd;
+        }
+
+        private void SlideVertical(float endValue, float duration, TweenCallback onEnd, Ease ease)
+        {
+            if (tween != null)
+            {
+                tween.Kill(false);
+            }
+
+            tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(ease);
+            tween.onComplete += onEnd;
+        }
+
+        private void SlideHorizontal(float endValue, float duration, TweenCallback onEnd, Ease ease)
+        {
+            if (tween != null)
+            {
+                tween.Kill(false);
+            }
+
+            tween = rectTransform.DOAnchorPosX(endValue, duration).SetEase(ease);
+            tween.onComplete += onEnd;
+        }
+        #endregion
+
+        #region Unity callbacks
+        void Start()
+        {
+            canvasGroup = gameObject.GetComponent<CanvasGroup>();
+            rectTransform = GetComponent<RectTransform>();
+            Hide();
+        }
+
+        void Update()
+        {
+
+        }
+
+        private void OnEnable()
+        {
+
+        }
+
+        private void OnDisable()
+        {
+
+        }
+        #endregion
     }
-    #endregion
-
-    #region Unity callbacks
-    void Start()
-    {
-        canvasGroup = gameObject.GetComponent<CanvasGroup>();
-        Hide();
-    }
-
-    void Update()
-    {
-
-    }
-
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
-
-    }
-    #endregion
 }

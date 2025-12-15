@@ -18,7 +18,7 @@ namespace UIPackage.UI
         #region Methods
         public void ChangingView(List<UINode> currentViewGroup, List<UINode> targetViewGroup)
         {
-            Debug.Log("Changing View");
+            Debug.Log("Changing View Open " + targetViewGroup[0].ID);
             HideViewGroup(currentViewGroup, targetViewGroup);
             ShowViewGroup(targetViewGroup);
         }
@@ -33,7 +33,9 @@ namespace UIPackage.UI
                     {
                         // Hide view if there is current view on targetview group
                         if (!IsViewNameExist(targetViewGroup, currentViewGroup[i].ID))
+                        {
                             listView[j].Hide();
+                        }
                     }
                 }
             }
@@ -48,7 +50,11 @@ namespace UIPackage.UI
                     if (viewGroup[i].ID == listView[j].node.ID)
                     {
                         if (!listView[j].isShow)
+                        {
                             StartCoroutine(listView[j].Show());
+                        }
+                        else
+                            listView[j].TriggerAlreadyShown();
                     }
                 }
                 for (int j = 0; j < listSceneLoader.Count; j++)
