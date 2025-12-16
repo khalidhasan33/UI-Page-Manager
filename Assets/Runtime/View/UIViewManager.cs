@@ -7,9 +7,13 @@ namespace UIPackage.UI
 {
     public class UIViewManager : MonoBehaviour
     {
+        [Header("UI Nodes")]
         public List<UINode> nodes;
 
+        [Header("UI Views")]
         [SerializeField] private List<UIView> listView;
+
+        [Header("Scene Loaders")]
         [SerializeField] private List<UIViewSceneLoader> listSceneLoader;
 
         #region Methods

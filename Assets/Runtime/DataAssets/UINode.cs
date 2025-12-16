@@ -6,10 +6,11 @@ namespace UIPackage.DataAssets
     [CreateAssetMenu(fileName = "Data", menuName = "UIPackage/NodeData")]
     public class UINode : ScriptableObject
     {
+        [Header("Required")]
         public string ID;
-
         public List<UINode> UINodesView;
 
+        [Header("Optional")]
         public UINode ActionButton1;
         public UINode ActionButton2;
         public UINode ActionButton3;

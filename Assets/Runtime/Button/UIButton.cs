@@ -7,9 +7,12 @@ namespace UIPackage.UI
 {
     public class UIButton : MonoBehaviour
     {
-        [SerializeField] private UIView view;
+        [Header("Required")]
+        [SerializeField][Required(WarningType.InspectorWarning)] private UIView view;
+        [SerializeField][Required(WarningType.InspectorWarning)] private Button button;
+
+        [Header("Config")]
         [SerializeField] private BottonType buttonType;
-        [SerializeField] private Button button;
 
         private UIViewManager viewManager;
 

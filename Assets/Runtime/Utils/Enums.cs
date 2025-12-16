@@ -41,4 +41,10 @@ namespace UIPackage.UI
         SlideFadeLeft,
         SlideFadeRight,
     }
+
+    public enum WarningType
+    {
+        InspectorWarning,
+        Error
+    }
 }

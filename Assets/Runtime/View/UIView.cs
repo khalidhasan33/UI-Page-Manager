@@ -14,16 +14,18 @@ namespace UIPackage.UI
     public class UIView : MonoBehaviour
     {
         [Header("Required")]
-        public UINode node;
+        [Required(WarningType.InspectorWarning)] public UINode node;
+
+        [Header("Config")]
         [SerializeField] private BehaviorAtStart behaviorAtStart = BehaviorAtStart.Hide;
 
-        [Header("Animations Show")]
+        [Header("Animations Show Configs")]
         [SerializeField] private ShowAnimations showAnimations = ShowAnimations.Fade;
         [SerializeField] private Ease showEaseAnimations = Ease.Linear;
         [SerializeField] private float startTransitionDelay = 0;
         [SerializeField] private float durationShow = 0.4f;
 
-        [Header("Animations Hide")]
+        [Header("Animations Hide Configs")]
         [SerializeField] private HideAnimations hideAnimations = HideAnimations.Fade;
         [SerializeField] private Ease hideEaseAnimations = Ease.Linear;
         [SerializeField] private float durationHide = 0.4f;

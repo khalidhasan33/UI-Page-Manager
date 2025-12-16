@@ -10,6 +10,7 @@ namespace UIPackage.UI
     [RequireComponent(typeof(CanvasGroup))]
     public class UIViewTransitionIn : MonoBehaviour
     {
+        [Header("Transition Configs")]
         [SerializeField] private HideAnimations hideAnimation = HideAnimations.Fade;
         [SerializeField] private Ease hideEaseAnimations = Ease.Linear;
         [SerializeField] private float durationHide = 0.4f;

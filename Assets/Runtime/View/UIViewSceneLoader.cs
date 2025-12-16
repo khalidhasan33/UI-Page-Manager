@@ -19,13 +19,18 @@ namespace UIPackage.UI
         [HideInInspector] public List<string> Popuplist;
         [ListToPopup(typeof(UIViewSceneLoader), "TMPList")]
         public string TargetScene;
-        public UINode node;
 
+        [Header("Required")]
+        [Required(WarningType.InspectorWarning)] public UINode node;
+
+        [Header("Transition Configs")]
         [SerializeField] private ShowAnimations showAnimations = ShowAnimations.Fade;
         [SerializeField] private Ease showEaseAnimations = Ease.Linear;
         [SerializeField] private float transitionDelay = 0;
         [SerializeField] private float transitionDuration = 0.4f;
         [SerializeField] private bool isAdditive;
+
+        [Header("Events")]
         [SerializeField] private UnityEvent onDelayTrigger;
         [SerializeField] private UnityEvent onStartTransition;
 
