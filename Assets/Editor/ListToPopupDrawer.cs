@@ -1,9 +1,9 @@
-using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using UIPackage.UI;
 
-namespace UIPackage.UI
+namespace UIPackage.Editor
 {
 #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(ListToPopupAttribute))]

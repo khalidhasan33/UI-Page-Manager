@@ -9,11 +9,8 @@ namespace UIPackage.UI
     {
         public List<UINode> nodes;
 
-        [SerializeField]
-        private List<UIView> listView;
-
-        [SerializeField]
-        private List<UIViewSceneLoader> listSceneLoader;
+        [SerializeField] private List<UIView> listView;
+        [SerializeField] private List<UIViewSceneLoader> listSceneLoader;
 
         #region Methods
         public void ChangingView(List<UINode> currentViewGroup, List<UINode> targetViewGroup)

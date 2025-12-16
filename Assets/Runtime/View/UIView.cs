@@ -3,96 +3,40 @@ using UIPackage.DataAssets;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace UIPackage.UI
 {
-    public enum BehaviorAtStart
-    {
-        DoNothing,
-        Hide,
-        PlayShowAnimation,
-    }
-
-    public enum ShowAnimations
-    { 
-        None,
-        Fade,
-        SlideUp,
-        SlideDown,
-        SlideLeft,
-        SlideRight,
-        SlideFadeUp,
-        SlideFadeDown,
-        SlideFadeLeft,
-        SlideFadeRight,
-    }
-
-    public enum HideAnimations
-    {
-        None,
-        Fade,
-        SlideUp,
-        SlideDown,
-        SlideLeft,
-        SlideRight,
-        SlideFadeUp,
-        SlideFadeDown,
-        SlideFadeLeft,
-        SlideFadeRight,
-    }
-
+    [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(Canvas))]
+    [RequireComponent(typeof(GraphicRaycaster))]
+    [RequireComponent(typeof(CanvasGroup))]
     public class UIView : MonoBehaviour
     {
         [Header("Required")]
         public UINode node;
-
-        [SerializeField]
-        private BehaviorAtStart behaviorAtStart = BehaviorAtStart.Hide;
+        [SerializeField] private BehaviorAtStart behaviorAtStart = BehaviorAtStart.Hide;
 
         [Header("Animations Show")]
-        [SerializeField]
-        private ShowAnimations showAnimations = ShowAnimations.Fade;
-
-        [SerializeField]
-        private Ease showEaseAnimations = Ease.Linear;
-
-        [SerializeField]
-        private float startTransitionDelay = 0;
-
-        [SerializeField]
-        private float durationShow = 0.4f;
+        [SerializeField] private ShowAnimations showAnimations = ShowAnimations.Fade;
+        [SerializeField] private Ease showEaseAnimations = Ease.Linear;
+        [SerializeField] private float startTransitionDelay = 0;
+        [SerializeField] private float durationShow = 0.4f;
 
         [Header("Animations Hide")]
-        [SerializeField]
-        private HideAnimations hideAnimations = HideAnimations.Fade;
-
-        [SerializeField]
-        private Ease hideEaseAnimations = Ease.Linear;
-
-        [SerializeField]
-        private float durationHide = 0.4f;
+        [SerializeField] private HideAnimations hideAnimations = HideAnimations.Fade;
+        [SerializeField] private Ease hideEaseAnimations = Ease.Linear;
+        [SerializeField] private float durationHide = 0.4f;
 
         [Header("Events")]
-        [SerializeField]
-        private UnityEvent onDelayTrigger;
+        [SerializeField] private UnityEvent onDelayTrigger;
+        [SerializeField] private UnityEvent onStartShow;
+        [SerializeField] private UnityEvent onFinishedShow;
+        [SerializeField] private UnityEvent onStartHide;
+        [SerializeField] private UnityEvent onFinishedHide;
+        [SerializeField] private UnityEvent onAlreadyShown;
 
-        [SerializeField]
-        private UnityEvent onStartShow;
-
-        [SerializeField]
-        private UnityEvent onFinishedShow;
-
-        [SerializeField]
-        private UnityEvent onStartHide;
-
-        [SerializeField]
-        private UnityEvent onFinishedHide;
-
-        [SerializeField]
-        private UnityEvent onAlreadyShown;
-
-        [HideInInspector]
-        public bool isShow;
+        [HideInInspector] public bool isShow;
 
         private bool isShowing;
         private RectTransform rectTransform;
@@ -114,14 +58,14 @@ namespace UIPackage.UI
                 onDelayTrigger.Invoke();
                 yield return new WaitForSeconds(startTransitionDelay);
 
-                TweenCallback onEnd = () =>
+                void onEnd()
                 {
                     isShow = true;
                     isShowing = false;
                     onFinishedShow.Invoke();
                     canvasGroup.interactable = true;
                     canvasGroup.blocksRaycasts = true;
-                };
+                }
 
                 float height = rectTransform.rect.height;
                 float width = rectTransform.rect.width;
@@ -233,14 +177,14 @@ namespace UIPackage.UI
         {
             onStartHide.Invoke();
 
-            TweenCallback onEnd = () =>
+            void onEnd()
             {
                 isShow = false;
                 onFinishedHide.Invoke();
                 canvasGroup.interactable = false;
                 canvasGroup.blocksRaycasts = false;
                 gameObject.SetActive(false);
-            };
+            }
 
             float height = rectTransform.rect.height;
             float width = rectTransform.rect.width;
@@ -294,10 +238,7 @@ namespace UIPackage.UI
 
         private void Fade(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
-            if (tween != null)
-            {
-                tween.Kill(false);
-            }
+            tween?.Kill(false);
 
             tween = canvasGroup.DOFade(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
@@ -305,10 +246,7 @@ namespace UIPackage.UI
 
         private void SlideVertical(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
-            if (tween != null)
-            {
-                tween.Kill(false);
-            }
+            tween?.Kill(false);
 
             tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
@@ -316,10 +254,7 @@ namespace UIPackage.UI
 
         private void SlideHorizontal(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
-            if (tween != null)
-            {
-                tween.Kill(false);
-            }
+            tween?.Kill(false);
 
             tween = rectTransform.DOAnchorPosX(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
@@ -342,26 +277,11 @@ namespace UIPackage.UI
                     gameObject.SetActive(false);
                 break;
             case BehaviorAtStart.PlayShowAnimation:
-                    // code block
+                    StartCoroutine(Show());
                 break;
             case BehaviorAtStart.DoNothing:
                 break;
             }
-        }
-
-        void Update()
-        {
-
-        }
-
-        private void OnEnable()
-        {
-            
-        }
-
-        private void OnDisable()
-        {
-            
         }
         #endregion
     }

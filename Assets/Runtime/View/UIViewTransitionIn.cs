@@ -1,19 +1,18 @@
 using DG.Tweening;
-using UIPackage.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UIPackage.UI
 {
+    [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(Canvas))]
+    [RequireComponent(typeof(GraphicRaycaster))]
+    [RequireComponent(typeof(CanvasGroup))]
     public class UIViewTransitionIn : MonoBehaviour
     {
-        [SerializeField]
-        private HideAnimations hideAnimation = HideAnimations.Fade;
-
-        [SerializeField]
-        private Ease hideEaseAnimations = Ease.Linear;
-
-        [SerializeField]
-        private float durationHide = 0.4f;
+        [SerializeField] private HideAnimations hideAnimation = HideAnimations.Fade;
+        [SerializeField] private Ease hideEaseAnimations = Ease.Linear;
+        [SerializeField] private float durationHide = 0.4f;
 
         private RectTransform rectTransform;
         private CanvasGroup canvasGroup;
@@ -32,12 +31,12 @@ namespace UIPackage.UI
 
         public void Hide()
         {
-            TweenCallback onEnd = () =>
+            void onEnd()
             {
                 canvasGroup.interactable = false;
                 canvasGroup.blocksRaycasts = false;
                 gameObject.SetActive(false);
-            };
+            }
 
             float height = rectTransform.rect.height;
             float width = rectTransform.rect.width;
@@ -71,10 +70,7 @@ namespace UIPackage.UI
 
         private void Fade(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
-            if (tween != null)
-            {
-                tween.Kill(false);
-            }
+            tween?.Kill(false);
 
             tween = canvasGroup.DOFade(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
@@ -82,10 +78,7 @@ namespace UIPackage.UI
 
         private void SlideVertical(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
-            if (tween != null)
-            {
-                tween.Kill(false);
-            }
+            tween?.Kill(false);
 
             tween = rectTransform.DOAnchorPosY(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
@@ -93,10 +86,7 @@ namespace UIPackage.UI
 
         private void SlideHorizontal(float endValue, float duration, TweenCallback onEnd, Ease ease)
         {
-            if (tween != null)
-            {
-                tween.Kill(false);
-            }
+            tween?.Kill(false);
 
             tween = rectTransform.DOAnchorPosX(endValue, duration).SetEase(ease);
             tween.onComplete += onEnd;
@@ -109,21 +99,6 @@ namespace UIPackage.UI
             canvasGroup = gameObject.GetComponent<CanvasGroup>();
             rectTransform = GetComponent<RectTransform>();
             Hide();
-        }
-
-        void Update()
-        {
-
-        }
-
-        private void OnEnable()
-        {
-
-        }
-
-        private void OnDisable()
-        {
-
         }
         #endregion
     }

@@ -5,24 +5,12 @@ using UnityEngine.UI;
 
 namespace UIPackage.UI
 {
-    public enum BottonType
-    {
-        ActionButton1, ActionButton2, ActionButton3, ActionButton4, ActionButton5,
-        ActionButton6, ActionButton7, ActionButton8, ActionButton9, ActionButton10
-    }
-
     public class UIButton : MonoBehaviour
     {
-        [SerializeField]
-        private UIView view;
+        [SerializeField] private UIView view;
+        [SerializeField] private BottonType buttonType;
+        [SerializeField] private Button button;
 
-        [SerializeField]
-        private BottonType buttonType;
-
-        [SerializeField]
-        private Button button;
-
-        private UINode node;
         private UIViewManager viewManager;
 
         #region Unity callbacks
