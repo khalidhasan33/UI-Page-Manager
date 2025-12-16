@@ -5,15 +5,16 @@ using UnityEngine.UI;
 
 namespace UIPackage.UI
 {
+    [RequireComponent(typeof(Button))]
     public class UIButton : MonoBehaviour
     {
         [Header("Required")]
         [SerializeField][Required(WarningType.InspectorWarning)] private UIView view;
-        [SerializeField][Required(WarningType.InspectorWarning)] private Button button;
 
         [Header("Config")]
         [SerializeField] private BottonType buttonType;
 
+        private Button button;
         private UIViewManager viewManager;
 
         #region Unity callbacks
@@ -62,6 +63,8 @@ namespace UIPackage.UI
 
         private void OnEnable()
         {
+            button = gameObject.GetComponent<Button>();
+
             if (button != null)
                 button.onClick.AddListener(OnClick);
 
