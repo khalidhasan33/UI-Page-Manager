@@ -246,7 +246,7 @@ MonoBehaviour:
   showAnimations: 5
   showEaseAnimations: 28
   startTransitionDelay: 0
-  durationShow: 0.8
+  durationShow: 0.4
   hideAnimations: 5
   hideEaseAnimations: 6
   durationHide: 0.4
@@ -516,4 +516,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 4532426372289710259}
   buttonType: 0
-  button: {fileID: 6307472977523211655}

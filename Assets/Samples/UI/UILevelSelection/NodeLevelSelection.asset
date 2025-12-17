@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: UILevelSelection
   UINodesView:
-  - {fileID: 11400000, guid: f744c3b7839ff68419f785e73a2a7d78, type: 2}
   - {fileID: 11400000}
   ActionButton1: {fileID: 11400000, guid: 55f48187288e39e4595ebcb567a4073e, type: 2}
   ActionButton2: {fileID: 11400000, guid: f744c3b7839ff68419f785e73a2a7d78, type: 2}
